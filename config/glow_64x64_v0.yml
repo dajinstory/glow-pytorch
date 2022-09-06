@@ -1,0 +1,86 @@
+name: glow_64x64_v0
+
+gpus: [0] #,1,2,3] #[4,5,6,7]
+seed: 310
+
+n_epochs: 100
+val_check_interval: 1.0 #0.5
+log_every_n_steps: 100
+
+DATA:
+  train:
+    type: BaseDataset
+    root_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/resized64x64
+    meta_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/CelebAHQ_train_meta.csv
+    abbreviation: false
+    in_size: 64
+
+    use_hflip: true
+    use_rot: false
+    use_shuffle: true
+    
+    batch_size_per_gpu: 16
+    num_workers: 4
+    pin_memory: true
+  
+  valid:
+    type: BaseDataset
+    root_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/resized64x64
+    meta_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
+    abbreviation: false
+    in_size: 64
+    
+    use_hflip: false
+    use_rot: false
+    use_shuffle: false
+    
+    batch_size_per_gpu: 4
+    num_workers: 1
+    pin_memory: true
+  
+  test:
+    type: BaseDataset
+    root_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/resized64x64
+    meta_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
+    abbreviation: false
+    in_size: 64
+
+    use_hflip: false
+    use_rot: false
+    use_shuffle: false
+    
+    batch_size_per_gpu: 4
+    num_workers: 1
+    pin_memory: true
+    
+    
+MODEL:
+  type: "LitGlowV0"
+  in_size: 64
+  gt_size: 64
+  n_bits: 8
+  pretrained: #/home/dajinhan/nas_dajinhan/models/
+  
+  flow_net:
+    type: Glow64x64V0
+    args:
+      pretrained:
+  
+  loss:
+    nll:
+      type: NLLLoss
+      args:
+        weight: 1.0
+        n_bits: 8
+        
+  optim:
+    type: Adam
+    lr: !!float 1e-4
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+  scheduler:
+    type: CosineAnnealingLR
+    T_max: 30
+    eta_min: !!float 1e-7
+  
