@@ -27,7 +27,7 @@ from collections import OrderedDict
 
 import cv2
 
-# NLL
+# NLL + quant_randomness
 class LitGlowV0(LitBaseModel):
     def __init__(self,
                  opt: dict,
@@ -47,7 +47,7 @@ class LitGlowV0(LitBaseModel):
 
         self.norm_mean = [0.5, 0.5, 0.5]
         self.norm_std = [1.0, 1.0, 1.0] #[0.5, 0.5, 0.5]
-        
+                
         self.preprocess = transforms.Normalize(
             mean=self.norm_mean, 
             std=self.norm_std)
@@ -92,7 +92,9 @@ class LitGlowV0(LitBaseModel):
         im, conditions = self.preprocess_batch(batch)
 
         # Forward
-        w, log_p, log_det, _ = self.flow_net.forward(im, conditions)
+        # quant_randomness = torch.zeros_like(im)
+        quant_randomness = self.preprocess(torch.rand_like(im)/self.n_bins) - self.preprocess(torch.zeros_like(im)) # x = (0~1)/n_bins, \ (im-m)/s + (x-m)/s - (0-m)/s = (im+x-m)/s
+        w, log_p, log_det, _ = self.flow_net.forward(im + quant_randomness, conditions)
         
         # Loss
         losses = dict()

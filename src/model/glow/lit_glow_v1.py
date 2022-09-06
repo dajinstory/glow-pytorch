@@ -27,7 +27,7 @@ from collections import OrderedDict
 
 import cv2
 
-# NLL
+# NLL + input normalization
 class LitGlowV1(LitBaseModel):
     def __init__(self,
                  opt: dict,
@@ -45,6 +45,8 @@ class LitGlowV1(LitBaseModel):
         self.opt = opt
         self.flow_net = flow_nets[opt['flow_net']['type']](**opt['flow_net']['args'])
 
+        self.norm_mean = [0.5, 0.5, 0.5]
+        self.norm_std = [1.0, 1.0, 1.0] #[0.5, 0.5, 0.5]
         self.norm_mean = [0.485, 0.456, 0.406]
         self.norm_std = [0.229, 0.224, 0.225]
         
@@ -92,7 +94,9 @@ class LitGlowV1(LitBaseModel):
         im, conditions = self.preprocess_batch(batch)
 
         # Forward
-        w, log_p, log_det, _ = self.flow_net.forward(im, conditions)
+        # quant_randomness = torch.zeros_like(im)
+        quant_randomness = self.preprocess(torch.rand_like(im)/self.n_bins) - self.preprocess(torch.zeros_like(im)) # x = (0~1)/n_bins, \ (im-m)/s + (x-m)/s - (0-m)/s = (im+x-m)/s
+        w, log_p, log_det, _ = self.flow_net.forward(im + quant_randomness, conditions)
         
         # Loss
         losses = dict()
