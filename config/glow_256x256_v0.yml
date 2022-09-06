@@ -19,7 +19,7 @@ DATA:
     use_rot: false
     use_shuffle: true
     
-    batch_size_per_gpu: 1
+    batch_size_per_gpu: 4
     num_workers: 1
     pin_memory: true
   
