@@ -10,8 +10,8 @@ log_every_n_steps: 100
 DATA:
   train:
     type: BaseDataset
-    root_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/resized256x256
-    meta_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/CelebAHQ_train_meta.csv
+    root_path: /data/dajinhan/datasets/CelebAHQ/resized256x256
+    meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_train_meta.csv
     abbreviation: false
     in_size: 256
 
@@ -25,8 +25,8 @@ DATA:
   
   valid:
     type: BaseDataset
-    root_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/resized256x256
-    meta_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
+    root_path: /data/dajinhan/datasets/CelebAHQ/resized256x256
+    meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
     abbreviation: false
     in_size: 256
     
@@ -40,8 +40,8 @@ DATA:
   
   test:
     type: BaseDataset
-    root_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/resized256x256
-    meta_path: /home/dajinhan/nas_dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
+    root_path: /data/dajinhan/datasets/CelebAHQ/resized256x256
+    meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
     abbreviation: false
     in_size: 256
 
@@ -59,7 +59,7 @@ MODEL:
   in_size: 256
   gt_size: 256
   n_bits: 5
-  pretrained: #/home/dajinhan/nas_dajinhan/models/
+  pretrained: #/data/dajinhan/models/
   
   flow_net:
     type: Glow256x256V0
