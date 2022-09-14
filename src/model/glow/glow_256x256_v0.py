@@ -30,22 +30,22 @@ class Glow256x256V0(nn.Module):
         # Blocks (3,256,256) -> (384,4,4)
         self.blocks = nn.Sequential(
             Block(squeeze=True, # (12,128,128)
-                  flow_type='InvConvFlow', n_flows=32, ch_in=12, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
+                  flow_type='InvConvFlowForGLOW', n_flows=32, ch_in=12, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
                   split=True),
             Block(squeeze=True, # (24,64,64)
-                  flow_type='InvConvFlow', n_flows=32, ch_in=24, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
+                  flow_type='InvConvFlowForGLOW', n_flows=32, ch_in=24, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
                   split=True),
             Block(squeeze=True, # (48,32,32)
-                  flow_type='InvConvFlow', n_flows=32, ch_in=48, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
+                  flow_type='InvConvFlowForGLOW', n_flows=32, ch_in=48, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
                   split=True),
             Block(squeeze=True, # (96,16,16)
-                  flow_type='InvConvFlow', n_flows=32, ch_in=96, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
+                  flow_type='InvConvFlowForGLOW', n_flows=32, ch_in=96, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
                   split=True),
             Block(squeeze=True, # (192,8,8)
-                  flow_type='InvConvFlow', n_flows=32, ch_in=192, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
+                  flow_type='InvConvFlowForGLOW', n_flows=32, ch_in=192, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
                   split=True),
             Block(squeeze=True, # (384,4,4)
-                  flow_type='InvConvFlow', n_flows=32, ch_in=384, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
+                  flow_type='InvConvFlowForGLOW', n_flows=32, ch_in=384, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
                   split=False),
         )
 

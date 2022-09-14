@@ -17,7 +17,7 @@ def sub_conv(ch_hidden, kernel):
                                     nn.ReLU(),
                                     nn.Conv2d(ch_hidden, ch_out, kernel, padding=pad),)
 
-class Glow64x64V0(nn.Module):
+class Glow64x64V1(nn.Module):
     def __init__(self, pretrained=None):
         super().__init__()
 
@@ -30,16 +30,16 @@ class Glow64x64V0(nn.Module):
         # Blocks (3,64,64) -> (96,4,4)
         self.blocks = nn.Sequential(
             Block(squeeze=True, # (12,32,32)
-                  flow_type='InvConvFlowForGLOW', n_flows=48, ch_in=12, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
+                  flow_type='InvConvFlow', n_flows=48, ch_in=12, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
                   split=True),
             Block(squeeze=True, # (24,16,16)
-                  flow_type='InvConvFlowForGLOW', n_flows=48, ch_in=24, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
+                  flow_type='InvConvFlow', n_flows=48, ch_in=24, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
                   split=True),
             Block(squeeze=True, # (48,8,8)
-                  flow_type='InvConvFlowForGLOW', n_flows=48, ch_in=48, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
+                  flow_type='InvConvFlow', n_flows=48, ch_in=48, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
                   split=True),
             Block(squeeze=True, # (96,4,4)
-                  flow_type='InvConvFlowForGLOW', n_flows=48, ch_in=96, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
+                  flow_type='InvConvFlow', n_flows=48, ch_in=96, ch_c=0, n_chunk=2, subnet=sub_conv(512,3), clamp=1.0, clamp_activation='GLOW',
                   split=False),
         )
 

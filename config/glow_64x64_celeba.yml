@@ -1,68 +1,68 @@
-name: glow_256x256_v0
+name: glow_64x64_celeba
 
-gpus: [1] #,1,2,3] #[4,5,6,7]
+gpus: [3] #,1,2,3] #[4,5,6,7]
 seed: 310
 
-n_epochs: 100
+n_epochs: 10000
 val_check_interval: 1.0 #0.5
-log_every_n_steps: 100
+log_every_n_steps: 1000
 
 DATA:
   train:
     type: BaseDataset
-    root_path: /data/dajinhan/datasets/CelebAHQ/resized256x256
+    root_path: /data/dajinhan/datasets/CelebAHQ/resized64x64
     meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_train_meta.csv
     abbreviation: false
-    in_size: 256
+    in_size: 64
 
     use_hflip: true
     use_rot: false
     use_shuffle: true
     
-    batch_size_per_gpu: 4
-    num_workers: 1
+    batch_size_per_gpu: 64
+    num_workers: 16
     pin_memory: true
   
   valid:
     type: BaseDataset
-    root_path: /data/dajinhan/datasets/CelebAHQ/resized256x256
+    root_path: /data/dajinhan/datasets/CelebAHQ/resized64x64
     meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
     abbreviation: false
-    in_size: 256
+    in_size: 64
     
     use_hflip: false
     use_rot: false
     use_shuffle: false
     
-    batch_size_per_gpu: 4
-    num_workers: 1
+    batch_size_per_gpu: 16
+    num_workers: 4
     pin_memory: true
   
   test:
     type: BaseDataset
-    root_path: /data/dajinhan/datasets/CelebAHQ/resized256x256
+    root_path: /data/dajinhan/datasets/CelebAHQ/resized64x64
     meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
     abbreviation: false
-    in_size: 256
+    in_size: 64
 
     use_hflip: false
     use_rot: false
     use_shuffle: false
     
-    batch_size_per_gpu: 1
+    batch_size_per_gpu: 4
     num_workers: 1
     pin_memory: true
     
     
 MODEL:
   type: "LitGlowV0"
-  in_size: 256
-  gt_size: 256
-  n_bits: 5
+  in_size: 64
+  gt_size: 64
+  n_bits: 8
   pretrained: #/data/dajinhan/models/
   
   flow_net:
-    type: Glow256x256V0
+    type: Glow64x64V0
     args:
       pretrained:
   
@@ -71,7 +71,7 @@ MODEL:
       type: NLLLoss
       args:
         weight: 1.0
-        n_bits: 5
+        n_bits: 8
         
   optim:
     type: Adam

@@ -7,6 +7,7 @@ from scipy import linalg as la
 
 logabs = lambda x: torch.log(torch.abs(x))
     
+
 class _ActNorm(nn.Module):
     """
     REFERENCE : https://github.com/y0ast/Glow-PyTorch/blob/master/modules.py
@@ -207,7 +208,64 @@ class RandomPermute(nn.Module):
     def reverse(self, output):
         input = output[:, self.perm_inv, ...]
         return input
+
+
+class AdditiveCoupling(nn.Module):
+    def __init__(self, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation='ATAN'):
+        super().__init__()
+        self.clamp = clamp
+        self.ch_in = ch_in
+        self.ch_c = ch_c
+        
+        self.n_chunk = n_chunk
+        self.ch_chunks = []
+        for _ in range(n_chunk):
+            self.ch_chunks.append((ch_in - sum(self.ch_chunks) - 1) // (n_chunk - len(self.ch_chunks)) + 1)
+        
+        # NN
+        self.nets = nn.ModuleList()
+        for ch_chunk in self.ch_chunks:
+            self.nets.append(subnet(ch_in-ch_chunk+ch_c, ch_chunk))
+            for idx, layer in enumerate(self.nets[-1]):
+                if type(layer).__name__ == 'Conv2d':
+                    self.nets[-1][idx].weight.data.normal_(0, 0.05)
+                    self.nets[-1][idx].bias.data.zero_()
+                
+        # Activation
+        f_clamps = {
+            'ATAN': (lambda u: 0.636 * torch.atan(u)),
+            'TANH': torch.tanh,
+            'SIGMOID': (lambda u: 2. * (torch.sigmoid(u) - 0.5)),
+            'GLOW': (lambda u: torch.sigmoid(u + 2))}
+        self.f_clamp = f_clamps[clamp_activation]
+
+    def forward(self, input, c=None):
+        chunks = list(torch.split(input, self.ch_chunks, dim=1))
+        log_det = 0
+        
+        # Nets
+        for idx in range(self.n_chunk):
+            u = torch.cat(chunks[:idx]+chunks[idx+1:], dim=1)
+            u_c = torch.cat([u, c], dim=1) if self.ch_c > 0 else u
+            chunks[idx] = chunks[idx] + self.nets[idx](u_c)
+                             
+        output = torch.cat(chunks, dim=1)
     
+        return output, log_det
+
+    def reverse(self, output, c=None):
+        chunks = list(torch.split(output, self.ch_chunks, dim=1))
+        
+        # Nets
+        for idx in reversed(range(self.n_chunk)):
+            u = torch.cat(chunks[:idx]+chunks[idx+1:], dim=1)
+            u_c = torch.cat([u, c], dim=1) if self.ch_c > 0 else u
+            chunks[idx] = chunks[idx] - self.nets[idx](u_c)
+         
+        input = torch.cat(chunks, dim=1)
+    
+        return input
+
 
 class AffineCoupling(nn.Module):
     def __init__(self, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation='ATAN'):
@@ -273,6 +331,127 @@ class AffineCoupling(nn.Module):
         return input
     
 
+class SingleAdditiveCoupling(nn.Module):
+    def __init__(self, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation='ATAN'):
+        super().__init__()
+        self.clamp = clamp
+        self.ch_in = ch_in
+        self.ch_c = ch_c
+        
+        self.n_chunk = n_chunk
+        self.ch_chunks = []
+        for _ in range(n_chunk):
+            self.ch_chunks.append((ch_in - sum(self.ch_chunks) - 1) // (n_chunk - len(self.ch_chunks)) + 1)
+        
+        # NN
+        self.nets = nn.ModuleList()
+        for ch_chunk in self.ch_chunks:
+            self.nets.append(subnet(ch_in-ch_chunk+ch_c, ch_chunk))
+            for idx, layer in enumerate(self.nets[-1]):
+                if type(layer).__name__ == 'Conv2d':
+                    self.nets[-1][idx].weight.data.normal_(0, 0.05)
+                    self.nets[-1][idx].bias.data.zero_()
+                
+        # Activation
+        f_clamps = {
+            'ATAN': (lambda u: 0.636 * torch.atan(u)),
+            'TANH': torch.tanh,
+            'SIGMOID': (lambda u: 2. * (torch.sigmoid(u) - 0.5)),
+            'GLOW': (lambda u: torch.sigmoid(u + 2))}
+        self.f_clamp = f_clamps[clamp_activation]
+
+    def forward(self, input, c=None):
+        chunks = list(torch.split(input, self.ch_chunks, dim=1))
+        log_det = 0
+        
+        # Nets
+        for idx in range(1):
+            u = torch.cat(chunks[:idx]+chunks[idx+1:], dim=1)
+            u_c = torch.cat([u, c], dim=1) if self.ch_c > 0 else u
+            chunks[idx] = chunks[idx] + self.nets[idx](u_c)
+                             
+        output = torch.cat(chunks, dim=1)
+    
+        return output, log_det
+
+    def reverse(self, output, c=None):
+        chunks = list(torch.split(output, self.ch_chunks, dim=1))
+        
+        # Nets
+        for idx in reversed(range(1)):
+            u = torch.cat(chunks[:idx]+chunks[idx+1:], dim=1)
+            u_c = torch.cat([u, c], dim=1) if self.ch_c > 0 else u
+            chunks[idx] = chunks[idx] - self.nets[idx](u_c)
+         
+        input = torch.cat(chunks, dim=1)
+    
+        return input
+
+
+class SingleAffineCoupling(nn.Module):
+    def __init__(self, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation='ATAN'):
+        super().__init__()
+        self.clamp = clamp
+        self.ch_in = ch_in
+        self.ch_c = ch_c
+        
+        self.n_chunk = n_chunk
+        self.ch_chunks = []
+        for _ in range(n_chunk):
+            self.ch_chunks.append((ch_in - sum(self.ch_chunks) - 1) // (n_chunk - len(self.ch_chunks)) + 1)
+        
+        # NN
+        self.nets = nn.ModuleList()
+        for ch_chunk in self.ch_chunks:
+            self.nets.append(subnet(ch_in-ch_chunk+ch_c, ch_chunk*2))
+            for idx, layer in enumerate(self.nets[-1]):
+                if type(layer).__name__ == 'Conv2d':
+                    self.nets[-1][idx].weight.data.normal_(0, 0.05)
+                    self.nets[-1][idx].bias.data.zero_()
+                
+        # Activation
+        f_clamps = {
+            'ATAN': (lambda u: 0.636 * torch.atan(u)),
+            'TANH': torch.tanh,
+            'SIGMOID': (lambda u: 2. * (torch.sigmoid(u) - 0.5)),
+            'GLOW': (lambda u: torch.sigmoid(u + 2))}
+        self.f_clamp = f_clamps[clamp_activation]
+
+    def forward(self, input, c=None):
+        chunks = list(torch.split(input, self.ch_chunks, dim=1))
+        log_det = 0
+        
+        # Nets
+        for idx in range(1):
+            u = torch.cat(chunks[:idx]+chunks[idx+1:], dim=1)
+            u_c = torch.cat([u, c], dim=1) if self.ch_c > 0 else u
+            log_s, t = self.nets[idx](u_c).chunk(2, 1)
+            log_s = self.clamp * self.f_clamp(log_s)
+            s = torch.exp(log_s)
+            chunks[idx] = (chunks[idx] + t) * s
+            log_det = log_det + torch.sum(log_s.view(log_s.shape[0], -1), 1)
+                             
+        output = torch.cat(chunks, dim=1)
+    
+        return output, log_det
+
+    def reverse(self, output, c=None):
+        chunks = list(torch.split(output, self.ch_chunks, dim=1))
+        
+        # Nets
+        for idx in reversed(range(1)):
+            u = torch.cat(chunks[:idx]+chunks[idx+1:], dim=1)
+            u_c = torch.cat([u, c], dim=1) if self.ch_c > 0 else u
+            log_s, t = self.nets[idx](u_c).chunk(2, 1)
+            log_s = self.clamp * self.f_clamp(log_s)
+            s = torch.exp(log_s)
+            chunks[idx] = chunks[idx] / s - t
+         
+        input = torch.cat(chunks, dim=1)
+    
+        return input
+
+
 class PermuteFlow(nn.Module):
     def __init__(self, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation="ATAN"):
         super().__init__()
@@ -293,6 +472,7 @@ class PermuteFlow(nn.Module):
         input = self.permute.reverse(input)
         return input
     
+
 class InvConvFlow(nn.Module):
     def __init__(self, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation="GLOW"):
         super().__init__()
@@ -316,4 +496,30 @@ class InvConvFlow(nn.Module):
         input = self.invconv.reverse(input,)
         input, _ = self.actnorm(input, reverse=True)
         return input
-    
+
+
+class InvConvFlowForGLOW(nn.Module):
+    def __init__(self, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation="GLOW"):
+        super().__init__()
+
+        # Flow Components
+        self.actnorm = ActNorm2d(ch_in)
+        self.invconv = InvConv2dLU(ch_in)
+        # self.coupling = SingleAffineCoupling(ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation)
+        # self.coupling = SingleAdditiveCoupling(ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation)
+        self.coupling = AffineCoupling(ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation)
+        
+    def forward(self, input, c=None):
+        output = input
+        output, log_det_0 = self.actnorm(output, logdet=0, reverse=False)
+        output, log_det_1 = self.invconv(output)
+        output, log_det_2 = self.coupling(output, c)
+        log_det = log_det_0 + log_det_1 + log_det_2
+        return output, log_det
+
+    def reverse(self, output, c=None):
+        input = output
+        input = self.coupling.reverse(input, c)
+        input = self.invconv.reverse(input,)
+        input, _ = self.actnorm(input, reverse=True)
+        return input

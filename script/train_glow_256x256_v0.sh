@@ -1,1 +1,0 @@
-python src/train.py --config config/glow_256x256_v0.yml

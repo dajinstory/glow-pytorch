@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from .flow import PermuteFlow, InvConvFlow
+from .flow import InvConvFlowForGLOW, PermuteFlow, InvConvFlow
 
 class Block(nn.Module):
     def __init__(self, 
@@ -16,7 +16,8 @@ class Block(nn.Module):
         # Flows
         flows = {
             'PermuteFlow': PermuteFlow,
-            'InvConvFlow': InvConvFlow}
+            'InvConvFlow': InvConvFlow,
+            'InvConvFlowForGLOW': InvConvFlowForGLOW}
         self.flows = nn.ModuleList()
         for _ in range(n_flows):
             self.flows.append(flows[flow_type](ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation))

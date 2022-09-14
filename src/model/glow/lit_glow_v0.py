@@ -47,7 +47,9 @@ class LitGlowV0(LitBaseModel):
 
         self.norm_mean = [0.5, 0.5, 0.5]
         self.norm_std = [1.0, 1.0, 1.0] #[0.5, 0.5, 0.5]
-                
+        # self.norm_mean = [0.485, 0.456, 0.406]
+        # self.norm_std = [0.229, 0.224, 0.225]
+
         self.preprocess = transforms.Normalize(
             mean=self.norm_mean, 
             std=self.norm_std)
@@ -120,31 +122,44 @@ class LitGlowV0(LitBaseModel):
         w, log_p, log_det, splits = self.flow_net.forward(im, conditions)
 
         # Reverse - Latent to Image
+        w_rand = torch.randn_like(w)
+        w_rand_temp = w_rand * 0.7
         splits_random = [torch.randn_like(split) for split in splits[:-1]] + [None]
+        splits_random_temp = [0.7*split for split in splits_random[:-1]] + [None]
+
         im_recs = self.flow_net.reverse(w, conditions, splits=splits)
         im_recr = self.flow_net.reverse(w, conditions, splits=splits_random)
-        im_gen = self.flow_net.reverse(torch.randn_like(w), conditions, splits=splits_random)
+        im_recr_temp = self.flow_net.reverse(w, conditions, splits=splits_random_temp)
+        im_gen = self.flow_net.reverse(w_rand, conditions, splits=splits_random)
+        im_gen_temp = self.flow_net.reverse(w_rand_temp, conditions, splits=splits_random_temp)
         
         # Format - range (0~1)
         im = torch.clamp(self.reverse_preprocess(im), 0, 1)
         im_recs = torch.clamp(self.reverse_preprocess(im_recs), 0, 1)
         im_recr = torch.clamp(self.reverse_preprocess(im_recr), 0, 1)
+        im_recr_temp = torch.clamp(self.reverse_preprocess(im_recr_temp), 0, 1)
         im_gen = torch.clamp(self.reverse_preprocess(im_gen), 0, 1)
+        im_gen_temp = torch.clamp(self.reverse_preprocess(im_gen_temp), 0, 1)
         
         # Metric - Image, CHW
         if batch_idx < 10:
             self.sampled_images.append(im[0].cpu())
             self.sampled_images.append(im_recs[0].cpu())
             self.sampled_images.append(im_recr[0].cpu())
+            self.sampled_images.append(im_recr_temp[0].cpu())
             self.sampled_images.append(im_gen[0].cpu())
+            self.sampled_images.append(im_gen_temp[0].cpu())
             
         # Metric - PSNR, SSIM
         im = im[0].cpu().numpy().transpose(1,2,0)
         im_recs = im_recs[0].cpu().numpy().transpose(1,2,0)
         im_recr = im_recr[0].cpu().numpy().transpose(1,2,0)
+        im_recr_temp = im_recr_temp[0].cpu().numpy().transpose(1,2,0)
         im_gen = im_gen[0].cpu().numpy().transpose(1,2,0)
         metric_psnr_r = PSNR(im_recr*255, im*255) 
         metric_ssim_r = SSIM(im_recr*255, im*255)
+        metric_psnr_r_temp = PSNR(im_recr_temp*255, im*255) 
+        metric_ssim_r_temp = SSIM(im_recr_temp*255, im*255)
 
         # Metric - NLL
         loss_nll, metric_nll = self.loss_nll(log_p, log_det, n_pixel=3*self.in_size*self.in_size)
@@ -152,14 +167,16 @@ class LitGlowV0(LitBaseModel):
         log_valid = {
             'val/metric/nll': metric_nll,
             'val/metric/psnr_r': metric_psnr_r,
-            'val/metric/ssim_r': metric_ssim_r}
+            'val/metric/ssim_r': metric_ssim_r,
+            'val/metric/psnr_r_temp': metric_psnr_r_temp,
+            'val/metric/ssim_r_temp': metric_ssim_r_temp,}
         self.log_dict(log_valid)
 
     def test_step(self, batch, batch_idx):
         self.validation_step(batch, batch_idx)
 
     def validation_epoch_end(self, outputs):
-        grid = make_grid(self.sampled_images, nrow=4)
+        grid = make_grid(self.sampled_images, nrow=6)
         if isinstance(self.logger, TensorBoardLogger):
             self.logger.experiment.add_image(
                 f'val/visualization',
@@ -182,7 +199,7 @@ class LitGlowV0(LitBaseModel):
                 optimizer, 
                 T_max=self.opt['scheduler']['T_max'], 
                 eta_min=self.opt['scheduler']['eta_min']),
-            'name': 'learning_rate_g'}
+            'name': 'learning_rate'}
         
 
         return [optimizer], [scheduler]

@@ -1,17 +1,17 @@
-name: glow_64x64_v0
+name: glow_64x64_imagenet_1affine
 
 gpus: [0] #,1,2,3] #[4,5,6,7]
 seed: 310
 
 n_epochs: 100
 val_check_interval: 1.0 #0.5
-log_every_n_steps: 100
+log_every_n_steps: 10000
 
 DATA:
   train:
     type: BaseDataset
-    root_path: /data/dajinhan/datasets/CelebAHQ/resized64x64
-    meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_train_meta.csv
+    root_path: /data/dajinhan/datasets/ImageNet/resized64x64/train_64x64
+    meta_path: /data/dajinhan/datasets/ImageNet/ImageNet_train_meta.csv
     abbreviation: false
     in_size: 64
 
@@ -25,8 +25,8 @@ DATA:
   
   valid:
     type: BaseDataset
-    root_path: /data/dajinhan/datasets/CelebAHQ/resized64x64
-    meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
+    root_path: /data/dajinhan/datasets/ImageNet/resized64x64/valid_64x64
+    meta_path: /data/dajinhan/datasets/ImageNet/ImageNet_valid_meta.csv
     abbreviation: false
     in_size: 64
     
@@ -34,14 +34,14 @@ DATA:
     use_rot: false
     use_shuffle: false
     
-    batch_size_per_gpu: 4
-    num_workers: 1
+    batch_size_per_gpu: 16
+    num_workers: 4
     pin_memory: true
   
   test:
     type: BaseDataset
-    root_path: /data/dajinhan/datasets/CelebAHQ/resized64x64
-    meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
+    root_path: /data/dajinhan/datasets/ImageNet/resized64x64/valid_64x64
+    meta_path: /data/dajinhan/datasets/ImageNet/ImageNet_valid_meta.csv
     abbreviation: false
     in_size: 64
 
