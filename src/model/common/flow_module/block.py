@@ -1,12 +1,12 @@
 import torch
 import torch.nn as nn
 
-from .flow import InvConvFlowForGLOW, PermuteFlow, InvConvFlow
+from .flow import PermuteFlow, InvConvFlow
 
 class Block(nn.Module):
     def __init__(self, 
                  squeeze,
-                 flow_type, n_flows, ch_in, ch_c, n_chunk, subnet, clamp, clamp_activation,
+                 flow_type, n_flows, coupling_type, ch_in, ch_c, n_chunk, subnet, clamp, clamp_activation,
                  split):
         super().__init__()
 
@@ -16,11 +16,10 @@ class Block(nn.Module):
         # Flows
         flows = {
             'PermuteFlow': PermuteFlow,
-            'InvConvFlow': InvConvFlow,
-            'InvConvFlowForGLOW': InvConvFlowForGLOW}
+            'InvConvFlow': InvConvFlow}
         self.flows = nn.ModuleList()
         for _ in range(n_flows):
-            self.flows.append(flows[flow_type](ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation))
+            self.flows.append(flows[flow_type](coupling_type, ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation))
 
         # Split
         self.split = split

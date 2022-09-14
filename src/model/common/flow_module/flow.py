@@ -453,12 +453,19 @@ class SingleAffineCoupling(nn.Module):
 
 
 class PermuteFlow(nn.Module):
-    def __init__(self, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation="ATAN"):
+    def __init__(self, coupling_type, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation="ATAN"):
         super().__init__()
+
+        couplings = {
+            'SingleAffine': SingleAffineCoupling,
+            'SingleAdditive': SingleAdditiveCoupling,
+            'Affine': AffineCoupling,
+            'Additive': AdditiveCoupling,
+        }
 
         # Flow Components
         self.permute = RandomPermute(ch_in)
-        self.coupling = AffineCoupling(ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation)
+        self.coupling = couplings[coupling_type](ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation)
         
     def forward(self, input, c=None):
         output = input
@@ -474,13 +481,20 @@ class PermuteFlow(nn.Module):
     
 
 class InvConvFlow(nn.Module):
-    def __init__(self, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation="GLOW"):
+    def __init__(self, coupling_type, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation="GLOW"):
         super().__init__()
+
+        couplings = {
+            'SingleAffine': SingleAffineCoupling,
+            'SingleAdditive': SingleAdditiveCoupling,
+            'Affine': AffineCoupling,
+            'Additive': AdditiveCoupling,
+        }
 
         # Flow Components
         self.actnorm = ActNorm2d(ch_in)
         self.invconv = InvConv2dLU(ch_in)
-        self.coupling = AffineCoupling(ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation)
+        self.coupling = couplings[coupling_type](ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation)
         
     def forward(self, input, c=None):
         output = input
@@ -497,29 +511,3 @@ class InvConvFlow(nn.Module):
         input, _ = self.actnorm(input, reverse=True)
         return input
 
-
-class InvConvFlowForGLOW(nn.Module):
-    def __init__(self, ch_in, ch_c, subnet, n_chunk=2, clamp=2.0, clamp_activation="GLOW"):
-        super().__init__()
-
-        # Flow Components
-        self.actnorm = ActNorm2d(ch_in)
-        self.invconv = InvConv2dLU(ch_in)
-        # self.coupling = SingleAffineCoupling(ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation)
-        # self.coupling = SingleAdditiveCoupling(ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation)
-        self.coupling = AffineCoupling(ch_in, ch_c, subnet, n_chunk, clamp, clamp_activation)
-        
-    def forward(self, input, c=None):
-        output = input
-        output, log_det_0 = self.actnorm(output, logdet=0, reverse=False)
-        output, log_det_1 = self.invconv(output)
-        output, log_det_2 = self.coupling(output, c)
-        log_det = log_det_0 + log_det_1 + log_det_2
-        return output, log_det
-
-    def reverse(self, output, c=None):
-        input = output
-        input = self.coupling.reverse(input, c)
-        input = self.invconv.reverse(input,)
-        input, _ = self.actnorm(input, reverse=True)
-        return input
