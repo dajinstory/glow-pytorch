@@ -15,7 +15,6 @@ from pytorch_lightning.loggers import TensorBoardLogger, WandbLogger
 from ..common.lit_basemodel import LitBaseModel
 from .glow_64x64_v0 import Glow64x64V0
 from .glow_256x256_v0 import Glow256x256V0
-from .vgg_header import get_vgg_header
 from loss import NLLLoss, TripletLoss, MSELoss, L1Loss, PerceptualLoss, IDLoss, GANLoss
 from metric import L1, PSNR, SSIM
 
