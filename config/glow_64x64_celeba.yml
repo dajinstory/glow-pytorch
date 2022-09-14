@@ -5,7 +5,7 @@ seed: 310
 
 n_epochs: 10000
 val_check_interval: 1.0 #0.5
-log_every_n_steps: 1000
+log_every_n_steps: 100 # MAX:609 for 64 batch
 
 DATA:
   train:
