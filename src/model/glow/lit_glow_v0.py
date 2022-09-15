@@ -43,6 +43,9 @@ class LitGlowV0(LitBaseModel):
 
         self.opt = opt
         self.flow_net = flow_nets[opt['flow_net']['type']](**opt['flow_net']['args'])
+        self.in_size = self.opt['in_size']
+        self.n_bits = self.opt['n_bits']
+        self.n_bins = 2.0**self.n_bits
 
         self.norm_mean = [0.5, 0.5, 0.5]
         self.norm_std = [1.0, 1.0, 1.0] #[0.5, 0.5, 0.5]
@@ -55,10 +58,6 @@ class LitGlowV0(LitBaseModel):
         self.reverse_preprocess = transforms.Normalize(
             mean=[-m/s for m,s in zip(self.norm_mean, self.norm_std)],
             std=[1/s for s in self.norm_std])
-        
-        self.in_size = self.opt['in_size']
-        self.n_bits = self.opt['n_bits']
-        self.n_bins = 2.0**self.n_bits
 
         # loss
         self._create_loss(opt['loss'])
@@ -112,7 +111,6 @@ class LitGlowV0(LitBaseModel):
         
         # Total Loss
         return loss_total_common
-
 
     def validation_step(self, batch, batch_idx):
         im, conditions = self.preprocess_batch(batch)
@@ -199,7 +197,6 @@ class LitGlowV0(LitBaseModel):
                 T_max=self.opt['scheduler']['T_max'], 
                 eta_min=self.opt['scheduler']['eta_min']),
             'name': 'learning_rate'}
-        
 
         return [optimizer], [scheduler]
     
