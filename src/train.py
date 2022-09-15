@@ -31,8 +31,9 @@ args = parser.parse_args(remaining)
 
 
 # Log, Checkpoint
-args.save_path = os.path.join('./experiment', args.name, 'checkpoint')
-args.log_path = os.path.join('./experiment', args.name, 'log')
+experiment_path = '/data/dajinhan/experiment' # './experiment'
+args.save_path = os.path.join(experiment_path, args.name, 'checkpoint')
+args.log_path = os.path.join(experiment_path, args.name, 'log')
 os.makedirs(args.save_path, exist_ok=True)
 os.makedirs(args.log_path, exist_ok=True)
 logger = TensorBoardLogger(args.log_path, name='flow')
