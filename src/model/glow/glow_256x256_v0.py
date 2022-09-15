@@ -15,7 +15,8 @@ def sub_conv(ch_hidden, kernel):
                                     nn.ReLU(),
                                     nn.Conv2d(ch_hidden, ch_hidden, kernel_center, padding=pad_center),
                                     nn.ReLU(),
-                                    nn.Conv2d(ch_hidden, ch_out, kernel, padding=pad),)
+                                    # nn.Conv2d(ch_hidden, ch_out, kernel, padding=pad),
+                                    ZeroConv2d(ch_hidden, ch_out),)
 
 class Glow256x256V0(nn.Module):
     def __init__(self, pretrained=None):
