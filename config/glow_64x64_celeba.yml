@@ -1,6 +1,6 @@
-name: glow_64x64_celeba_test
+name: glow_64x64_celeba_1affine
 
-gpus: [0] #,1,2,3] #[4,5,6,7]
+gpus: [1] #,1,2,3] #[4,5,6,7]
 seed: 310
 
 n_epochs: 10000
@@ -34,8 +34,8 @@ DATA:
     use_rot: false
     use_shuffle: false
     
-    batch_size_per_gpu: 16
-    num_workers: 4
+    batch_size_per_gpu: 64
+    num_workers: 16
     pin_memory: true
   
   test:
@@ -49,8 +49,8 @@ DATA:
     use_rot: false
     use_shuffle: false
     
-    batch_size_per_gpu: 4
-    num_workers: 1
+    batch_size_per_gpu: 16
+    num_workers: 4
     pin_memory: true
     
     
