@@ -45,14 +45,17 @@ class Glow64x64V0(nn.Module):
         )
 
         # checkpoint
-        if pretrained is not None:
-            ckpt_path = pretrained['ckpt_path']
-            print("Load flownet - Checkpoint : ", ckpt_path, flush=True)
-            self.init_weights(ckpt_path)
-        else:
+        if pretrained is None:
+            # print("Load flownet -  No Initialize", flush=True)
             print("Load flownet -  Initial Random N(0,0.01)", flush=True)
             for p in self.parameters():
                 p.data = 0.01 * torch.randn_like(p)
+        elif pretrained is True:
+            print("Load flownet -  Model already loaded from LitGlow", flush=True)
+        else:
+            ckpt_path = pretrained['ckpt_path']
+            print("Load flownet - Checkpoint : ", ckpt_path, flush=True)
+            self.init_weights(ckpt_path)
     
     def init_weights(self, ckpt_path):
         self.load_state_dict(torch.load(ckpt_path), strict=True)
