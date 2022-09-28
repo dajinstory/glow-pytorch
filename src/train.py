@@ -14,7 +14,7 @@ from model import build_model
 # Parser
 ## Config Parser
 config_parser = argparse.ArgumentParser(description='Config file path')
-config_parser.add_argument('-c', '--config', default='config/pgflow_v0.yml', metavar='FLIE')
+config_parser.add_argument('-c', '--config', default='config/glow_v0.yml', metavar='FILE')
 args_config, remaining = config_parser.parse_known_args()
 
 ## Additional Argument Parser
