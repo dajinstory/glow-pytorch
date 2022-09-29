@@ -14,7 +14,7 @@ def build_model(opt, is_train=True):
         model_type = opt['type']
         if opt['pretrained']:
             print("Load Checkpoint from ", opt['pretrained']['ckpt_path'])
-            model = models[model_type].load_from_checkpoint(opt['pretrained']['ckpt_path'], pretrained=True, strict=False)
+            model = models[model_type].load_from_checkpoint(opt['pretrained']['ckpt_path'], pretrained=True)
         else:
             model = models[model_type](opt)
     except:

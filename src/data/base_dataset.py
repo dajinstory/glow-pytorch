@@ -43,7 +43,7 @@ class BaseDataset(Dataset):
 
         # Norm, Noise
         if self.norm:
-            norm = T.Normalize(mean, std)
+            norm = T.Normalize(self.mean, self.std)
             im = norm(im)
         if self.noise:
             im += 0.005 * torch.rand_like(im)

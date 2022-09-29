@@ -58,16 +58,27 @@ class Glow256x256V0(nn.Module):
                 p.data = 0.01 * torch.randn_like(p)
         elif pretrained is True:
             print("Load flownet -  Model already loaded from LitGlow", flush=True)
+            self.load_initial_settings()
         else:
             ckpt_path = pretrained['ckpt_path']
             print("Load flownet - Checkpoint : ", ckpt_path, flush=True)
-            self.init_weights(ckpt_path)
-    
-    def init_weights(self, ckpt_path):
+            self.load_weights(ckpt_path)
+            self.load_initial_settings()
+ 
+    def load_weights(self, ckpt_path):
         self.load_state_dict(torch.load(ckpt_path), strict=True)
-        for block in [*self.blocks]:
+
+    def load_initial_settings(self):
+        # Init actnorm settings
+        for block in [*self.blocks,]:
             for flow in block.flows:
                 flow.actnorm.inited=True
+        # Init ZeroConv settings
+        for block in [*self.blocks,]:
+            for flow in block.flows:
+                for subnet in flow.coupling.nets:
+                    zeroconv = subnet[-1]
+                    zeroconv.inited=True
 
     def forward(self, x, conditions):
         output = x        

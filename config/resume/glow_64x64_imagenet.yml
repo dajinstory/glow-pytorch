@@ -1,0 +1,90 @@
+name: glow_64x64_imagenet_affine
+
+gpus: [0]
+seed: 310
+
+n_epochs: 10000
+val_check_interval: 1.0 #0.5
+log_every_n_steps: 3000 # MAX:23000 for 64 batch
+
+experiment_root_path: /data/dajinhan/experiment
+
+DATA:
+  train:
+    type: BaseDataset
+    root_path: /data/dajinhan/datasets/ImageNet/resized64x64/train_64x64
+    meta_path: /data/dajinhan/datasets/ImageNet/ImageNet_train_meta.csv
+    abbreviation: false
+    in_size: 64
+
+    use_hflip: true
+    use_rot: false
+    use_shuffle: true
+    
+    batch_size_per_gpu: 64
+    num_workers: 16
+    pin_memory: true
+  
+  valid:
+    type: BaseDataset
+    root_path: /data/dajinhan/datasets/ImageNet/resized64x64/valid_64x64
+    meta_path: /data/dajinhan/datasets/ImageNet/ImageNet_valid_meta.csv
+    abbreviation: false
+    in_size: 64
+    
+    use_hflip: false
+    use_rot: false
+    use_shuffle: false
+    
+    batch_size_per_gpu: 64
+    num_workers: 16
+    pin_memory: true
+  
+  test:
+    type: BaseDataset
+    root_path: /data/dajinhan/datasets/ImageNet/resized64x64/valid_64x64
+    meta_path: /data/dajinhan/datasets/ImageNet/ImageNet_valid_meta.csv
+    abbreviation: false
+    in_size: 64
+
+    use_hflip: false
+    use_rot: false
+    use_shuffle: false
+    
+    batch_size_per_gpu: 16
+    num_workers: 4
+    pin_memory: true
+    
+    
+MODEL:
+  type: "LitGlowV0"
+  in_size: 64
+  gt_size: 64
+  n_bits: 8
+  pretrained:
+    ckpt_path: /home/dajinhan/nas_dajinhan/experiments/glow/result/litglow_64x64_imagenet.ckpt
+
+  flow_net:
+    type: Glow64x64V0
+    args:
+      pretrained:
+        # ckpt_path:
+        
+  loss:
+    nll:
+      type: NLLLoss
+      args:
+        weight: 1.0
+        n_bits: 8
+        
+  optim:
+    type: Adam
+    lr: !!float 1e-4
+    weight_decay: 0
+    betas: [0.9, 0.99]
+
+  scheduler:
+    type: CosineAnnealingLR
+    T_max: 30
+    eta_min: !!float 1e-7
+  

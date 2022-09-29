@@ -1,17 +1,19 @@
-name: glow_64x64_imagenet_1affine
+name: glow_64x64_celeba_affine
 
-gpus: [0] #,1,2,3] #[4,5,6,7]
+gpus: [0]
 seed: 310
 
 n_epochs: 10000
 val_check_interval: 1.0 #0.5
-log_every_n_steps: 3000 # MAX:23000 for 64 batch
+log_every_n_steps: 100 # MAX:609 for 64 batch
+
+experiment_root_path: /data/dajinhan/experiment
 
 DATA:
   train:
     type: BaseDataset
-    root_path: /data/dajinhan/datasets/ImageNet/resized64x64/train_64x64
-    meta_path: /data/dajinhan/datasets/ImageNet/ImageNet_train_meta.csv
+    root_path: /data/dajinhan/datasets/CelebAHQ/resized64x64
+    meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_train_meta.csv
     abbreviation: false
     in_size: 64
 
@@ -25,8 +27,8 @@ DATA:
   
   valid:
     type: BaseDataset
-    root_path: /data/dajinhan/datasets/ImageNet/resized64x64/valid_64x64
-    meta_path: /data/dajinhan/datasets/ImageNet/ImageNet_valid_meta.csv
+    root_path: /data/dajinhan/datasets/CelebAHQ/resized64x64
+    meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
     abbreviation: false
     in_size: 64
     
@@ -40,8 +42,8 @@ DATA:
   
   test:
     type: BaseDataset
-    root_path: /data/dajinhan/datasets/ImageNet/resized64x64/valid_64x64
-    meta_path: /data/dajinhan/datasets/ImageNet/ImageNet_valid_meta.csv
+    root_path: /data/dajinhan/datasets/CelebAHQ/resized64x64
+    meta_path: /data/dajinhan/datasets/CelebAHQ/CelebAHQ_valid_meta.csv
     abbreviation: false
     in_size: 64
 
@@ -59,12 +61,14 @@ MODEL:
   in_size: 64
   gt_size: 64
   n_bits: 8
-  pretrained: #/data/dajinhan/models/
+  pretrained:
+    ckpt_path: /home/dajinhan/nas_dajinhan/experiments/glow/result/litglow_64x64_celeba.ckpt
   
   flow_net:
     type: Glow64x64V0
     args:
       pretrained:
+        # ckpt_path:
   
   loss:
     nll:

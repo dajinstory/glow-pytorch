@@ -20,7 +20,6 @@ args_config, remaining = config_parser.parse_known_args()
 ## Additional Argument Parser
 parser = argparse.ArgumentParser(description='Config file to arguments')
 parser.add_argument('--seed', type=int, default=310)
-parser.add_argument('--resume', action='store_true', default=False)
 
 ## Parse arguments
 with open(args_config.config, 'r') as f:
@@ -47,38 +46,16 @@ datamodule = build_datamodule(args.DATA, is_train=True)
 
 # Model
 model = build_model(args.MODEL, is_train=True)
-ckpt_path = args.MODEL['pretrained']['ckpt_path'] if args.resume else None
+ckpt_path = args.MODEL['pretrained']['ckpt_path']# if args.resume else None
 
 
-# Callbacks
-## Callback - Checkpoint
-checkpoint_callback_nll = ModelCheckpoint(
-    dirpath=args.save_path,
-    filename='best-epoch{epoch:02d}-nll_{val/metric/nll:.4f}',
-    monitor='val/metric/nll',
-    save_last=True,
-    save_top_k=3,
-    mode='min',
-    auto_insert_metric_name=False)
-
-checkpoint_callbacks = [
-    checkpoint_callback_nll]
-
-## Callback - LR monitor
-lr_monitor = LearningRateMonitor(logging_interval='epoch')
-
-## Total Callbacks
-total_callbacks = [*checkpoint_callbacks, lr_monitor]
-
-
-# Train
+# Test
 ## Lightning Trainer
 trainer = Trainer(
     strategy='ddp', # 'ddp' #for python
     accelerator='gpu', 
     devices=args.gpus,
     logger=logger,
-    callbacks=total_callbacks,
     default_root_dir=args.save_path,
     max_epochs=args.n_epochs, 
     val_check_interval=args.val_check_interval,
@@ -86,5 +63,5 @@ trainer = Trainer(
     resume_from_checkpoint=ckpt_path,
     )
 
-## Train model
-trainer.fit(model=model, datamodule=datamodule)
+## Test model
+trainer.test(model=model, datamodule=datamodule)

@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=3 python src/test.py --config config/test/glow_256x256_celeba.yml
