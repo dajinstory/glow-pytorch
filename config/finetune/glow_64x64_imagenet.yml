@@ -62,13 +62,13 @@ MODEL:
   gt_size: 64
   n_bits: 8
   pretrained:
-    ckpt_path: /home/dajinhan/nas_dajinhan/experiments/glow/result/litglow_64x64_imagenet.ckpt
+    # ckpt_path: /home/dajinhan/nas_dajinhan/experiments/glow/result/litglow_64x64_imagenet.ckpt
 
   flow_net:
     type: Glow64x64V0
     args:
       pretrained:
-        # ckpt_path: /home/dajinhan/nas_dajinhan/experiments/glow/result/glow_64x64_imagenet.ckpt
+        ckpt_path: /home/dajinhan/nas_dajinhan/experiments/glow/result/glow_64x64_imagenet.ckpt
         
   loss:
     nll:

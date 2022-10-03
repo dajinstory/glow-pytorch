@@ -62,13 +62,13 @@ MODEL:
   gt_size: 256
   n_bits: 5
   pretrained: 
-    ckpt_path: /home/dajinhan/nas_dajinhan/experiments/glow/result/litglow_256x256_celeba.ckpt
+    # ckpt_path: /home/dajinhan/nas_dajinhan/experiments/glow/result/litglow_256x256_celeba.ckpt
   
   flow_net:
     type: Glow256x256V0
     args:
       pretrained:
-        # ckpt_path:/home/dajinhan/nas_dajinhan/experiments/glow/result/glow_256x256_celeba.ckpt
+        ckpt_path:/home/dajinhan/nas_dajinhan/experiments/glow/result/glow_256x256_celeba.ckpt
   
   loss:
     nll:

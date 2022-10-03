@@ -68,7 +68,7 @@ MODEL:
     type: Glow256x256V0
     args:
       pretrained:
-        # ckpt_path:
+        # ckpt_path:/home/dajinhan/nas_dajinhan/experiments/glow/result/glow_256x256_celeba.ckpt
   
   loss:
     nll:
