@@ -4,7 +4,7 @@ Implementation of "Generative Flow with Invertible 1x1 Convolutions" (https://ar
 
 For personal study and research, I referred to several Normalizing-Flow repositories and refactored the code to facilitate normalizing flow-related experiments. 
 
-# Requirements
+## Requirements
 
 - PyTorch 1.7.1
 - CUDA 11.0
@@ -13,15 +13,15 @@ For personal study and research, I referred to several Normalizing-Flow reposito
 > cd glow-pytorch <br/>
 > pip install requirements.txt <br/>
 
-# Usage
+## Usage
 
-## Preparing Dataset, Configs
+### Preparing Dataset, Configs
 
 For training, you need to prepare Dataset and meta file. Meta file for ImageNet and Celeba dataset are in data/{DATASET_NAME}/train_meta.csv. It only contains the file name of dataset.
 
 Also you should edit config files. There are "*_path" named keys. Those keys contains root path of dataset, path of meta file and path to save log and checkpoint files.
 
-## Training Model
+### Training Model
 
 You can train model from scratch,
 > bash script/train/train_glow_64x64_celeba.sh <br/>
@@ -32,13 +32,13 @@ resume from pretrained checkpoints,
 and finetune from pretrained weights
 > bash script/finetune/train_glow_64x64_celeba.sh <br/>
 
-## Demo
+### Demo
 
 You can check the sampling result of the pretrained model by running src/demo.ipynb
 
 If you want to utilize the GLOW model for your personal research, you just need to refer to src/demo.ipynb, src/model/ and src/loss/nll_loss.py.
 
-## Pretrained Checkpoints
+### Pretrained Checkpoints
 
 I trained 64x64 model on ImageNet and 256x256 model on Celeba dataset for ???? and ???? iterations, respectively. These models followed the setting from GLOW official paper. I got bpd(bits per dimension) about ?? and ?? for each, which are ?? and ?? from official paper. Maybe data preprocessing, training loop could made this difference. I trained 64x64 model with 1 GPU, 64 batch size on each GPU. And I trained 256x256 model with 4 GPUs, 8 batch size on each GPU. 
 
@@ -62,7 +62,7 @@ Also I trained 64x64 model on Celeba 64x64 Dataset and trained 256x256 model whi
 | GLOW256x256V0 | CelebA      | TBA  | Official Setting      |
 | GLOW256x256V1 | CelebA      | TBA  | additive -> affine    |
 
-# Samples
+## Samples
 
 ![Sample from ImageNet, 64x64](doc/sample_64x64_imagenet.png)
 
@@ -90,7 +90,7 @@ TBA
 TBA
 ~~Sample from 256x256 Celeba dataset, GLOW256x256V1. At ???,??? iterations. (trained on ?.??M images)~~
 
-# Reference
+## Reference
 https://github.com/VLL-HD/FrEIA <br/>
 https://github.com/rosinality/glow-pytorch <br/>
 https://github.com/y0ast/Glow-PyTorch <br/>
