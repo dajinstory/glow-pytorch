@@ -52,17 +52,28 @@ ckpt_path = args.MODEL['pretrained']['ckpt_path'] if args.resume else None
 
 # Callbacks
 ## Callback - Checkpoint
-checkpoint_callback_nll = ModelCheckpoint(
+checkpoint_callback_train_nll = ModelCheckpoint(
     dirpath=args.save_path,
-    filename='best-epoch{epoch:02d}-nll_{val/metric/nll:.4f}',
-    monitor='val/metric/nll',
+    filename='best-epoch{epoch:02d}-train_nll_{train/loss_nll:.4f}',
+    monitor='train/loss_nll',
     save_last=True,
     save_top_k=3,
     mode='min',
     auto_insert_metric_name=False)
 
+checkpoint_callback_valid_nll = ModelCheckpoint(
+    dirpath=args.save_path,
+    filename='best-epoch{epoch:02d}-valid_nll_{val/metric/nll:.4f}',
+    monitor='val/metric/nll',
+    save_last=False,
+    save_top_k=3,
+    mode='min',
+    auto_insert_metric_name=False)
+
 checkpoint_callbacks = [
-    checkpoint_callback_nll]
+    checkpoint_callback_train_nll,
+    checkpoint_callback_valid_nll,
+]
 
 ## Callback - LR monitor
 lr_monitor = LearningRateMonitor(logging_interval='epoch')

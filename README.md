@@ -57,24 +57,38 @@ Also I trained 64x64 model on Celeba 64x64 Dataset and trained 256x256 model whi
 
 |     Model     |   Dataset   |                              Checkpoint                                     |          Note         |
 | ------------- | ----------- | --------------------------------------------------------------------------- | --------------------- |
-| GLOW64x64V0   | ImageNet    | [GLOW64X64V0_ImageNet](TBD)  | Official Setting      |
-| GLOW64x64V0   | CelebA      | [GLOW64X64V0_CelebA](TBD)  | 64x64 CelebA Dataset   |
-| GLOW256x256V0 | CelebA      | [GLOW256X256V0](TBD)  | Official Setting      |
-| GLOW256x256V1 | CelebA      | [GLOW256x256V1](TBD)  | additive -> affine    |
+| GLOW64x64V0   | ImageNet    | [GLOW64X64V0_ImageNet](https://drive.google.com/file/d/1ZrSXC6vVFZnAj1VWZYb0XQp6cJQqJTCT/view?usp=sharing)  | Official Setting      |
+| GLOW64x64V0   | CelebA      | [GLOW64X64V0_CelebA](https://drive.google.com/file/d/1_6hFc0OkyHusoATkXJUmnyA9rw4aRnnY/view?usp=sharing)  | 64x64 CelebA Dataset   |
+| GLOW256x256V0 | CelebA      | TBA  | Official Setting      |
+| GLOW256x256V1 | CelebA      | TBA  | additive -> affine    |
 
 # Samples
 
 ![Sample from ImageNet, 64x64](doc/sample_64x64_imagenet.png)
+
 Sample from 64x64 ImageNet dataset. At ???,??? iterations. (trained on ?.??M images)
 
 ![Sample from Celeba, 64x64](doc/sample_64x64_celeba.png)
+
 Sample from 64x64 Celeba dataset. At ???,??? iterations. (trained on ?.??M images)
 
+![Sample temperature, 64x64](doc/sample_temperature.png)
+
+Results of different sampling temperatures. (0, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0)
+
+![Sample interpolation, 64x64](doc/sample_interpolation.png)
+
+Result of z space interpolation
+
 ![Sample from Celeba, 256x256, v0](doc/sample_256x256_v0_celeba.png)
-Sample from 256x256 Celeba dataset, GLOW256x256V0. At ???,??? iterations. (trained on ?.??M images)
+
+TBA
+~~Sample from 256x256 Celeba dataset, GLOW256x256V0. At ???,??? iterations. (trained on ?.??M images)~~
 
 ![Sample from Celeba, 256x256, v1](doc/sample_256x256_v1_celeba.png)
-Sample from 256x256 Celeba dataset, GLOW256x256V1. At ???,??? iterations. (trained on ?.??M images)
+
+TBA
+~~Sample from 256x256 Celeba dataset, GLOW256x256V1. At ???,??? iterations. (trained on ?.??M images)~~
 
 # Reference
 https://github.com/VLL-HD/FrEIA <br/>
