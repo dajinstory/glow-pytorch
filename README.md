@@ -9,6 +9,7 @@ For personal study and research, I referred to several Normalizing-Flow reposito
 - CUDA 11.0
 - Python 3.9
 - PyTorch 1.11
+- others : requirements.txt
 
 > git clone https://github.com/dajinstory/glow-pytorch.git <br/>
 > cd glow-pytorch <br/>
