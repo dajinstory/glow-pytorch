@@ -6,8 +6,9 @@ For personal study and research, I referred to several Normalizing-Flow reposito
 
 ## Requirements
 
-- PyTorch 1.7.1
 - CUDA 11.0
+- Python 3.9
+- PyTorch 1.11
 
 > git clone https://github.com/dajinstory/glow-pytorch.git <br/>
 > cd glow-pytorch <br/>

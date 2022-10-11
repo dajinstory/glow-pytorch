@@ -6,4 +6,11 @@ from .gan_loss import GANLoss
 from .contrastive_loss import TripletLoss
 from .id_loss import IDLoss
 
-__all__ = ['NLLLoss', 'MSELoss', 'L1Loss', 'TripletLoss', 'PerceptualLoss', 'PerceptualVGG', 'GANLoss', 'IDLoss']
+__all__ = [
+    'NLLLoss', 
+    'MSELoss', 
+    'L1Loss', 
+    'TripletLoss', 
+    'PerceptualLoss', 'PerceptualVGG', 
+    'GANLoss', 
+    'IDLoss']
