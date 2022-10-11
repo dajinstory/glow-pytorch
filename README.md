@@ -13,13 +13,13 @@ For personal study and research, I referred to several Normalizing-Flow reposito
 
 > git clone https://github.com/dajinstory/glow-pytorch.git <br/>
 > cd glow-pytorch <br/>
-> pip install requirements.txt <br/>
+> pip install -r requirements.txt <br/>
 
 ## Usage
 
 ### Preparing Dataset, Configs
 
-For training, you need to prepare Dataset and meta file. Meta file for ImageNet and Celeba dataset are in data/{DATASET_NAME}/train_meta.csv. It only contains the file name of dataset.
+For training, you need to prepare Dataset and meta file. Meta file for ImageNet and CelebA dataset are in data/{DATASET_NAME}/train_meta.csv. It only contains the file name of dataset.
 
 Also you should edit config files. There are "*_path" named keys. Those keys contains root path of dataset, path of meta file and path to save log and checkpoint files.
 
@@ -42,9 +42,9 @@ If you want to utilize the GLOW model for your personal research, you just need 
 
 ### Pretrained Checkpoints
 
-I trained 64x64 model on ImageNet and 256x256 model on Celeba dataset for ???? and ???? iterations, respectively. These models followed the setting from GLOW official paper. I got bpd(bits per dimension) about ?? and ?? for each, which are ?? and ?? from official paper. Maybe data preprocessing, training loop could made this difference. I trained 64x64 model with 1 GPU, 64 batch size on each GPU. And I trained 256x256 model with 4 GPUs, 8 batch size on each GPU. 
+I trained 64x64 model on ImageNet and 256x256 model on CelebA dataset for ???? and ???? iterations, respectively. These models followed the setting from GLOW official paper. I got bpd(bits per dimension) about ?? and ?? for each, which are ?? and ?? from official paper. Maybe data preprocessing, training loop could made this difference. I trained 64x64 model with 1 GPU, 64 batch size on each GPU. And I trained 256x256 model with 4 GPUs, 8 batch size on each GPU. 
 
-Also I trained 64x64 model on Celeba 64x64 Dataset and trained 256x256 model which has affine-coupling rather than additive-coupling used in official paper. I got bpd(bits per dimension) about ?? and ?? for each.
+Also I trained 64x64 model on CelebA 64x64 Dataset and trained 256x256 model which has affine-coupling rather than additive-coupling used in official paper. I got bpd(bits per dimension) about ?? and ?? for each.
 
 |      HParam       |          GLOW64x64V0          |         GLOW256x256V0         |         GLOW256x256V1         |
 | ----------------- | ----------------------------- | ----------------------------- | ----------------------------- |
@@ -70,9 +70,9 @@ Also I trained 64x64 model on Celeba 64x64 Dataset and trained 256x256 model whi
 
 Sample from 64x64 ImageNet dataset. At ???,??? iterations. (trained on ?.??M images)
 
-![Sample from Celeba, 64x64](doc/sample_64x64_celeba.png)
+![Sample from CelebA, 64x64](doc/sample_64x64_celeba.png)
 
-Sample from 64x64 Celeba dataset. At ???,??? iterations. (trained on ?.??M images)
+Sample from 64x64 CelebA dataset. At ???,??? iterations. (trained on ?.??M images)
 
 ![Sample temperature, 64x64](doc/sample_temperature.png)
 
@@ -82,15 +82,15 @@ Results of different sampling temperatures. (0, 0.25, 0.5, 0.6, 0.7, 0.8, 0.9, 1
 
 Result of z space interpolation
 
-![Sample from Celeba, 256x256, v0](doc/sample_256x256_v0_celeba.png)
+![Sample from CelebA, 256x256, v0](doc/sample_256x256_v0_celeba.png)
 
 TBA
-~~Sample from 256x256 Celeba dataset, GLOW256x256V0. At ???,??? iterations. (trained on ?.??M images)~~
+~~Sample from 256x256 CelebA dataset, GLOW256x256V0. At ???,??? iterations. (trained on ?.??M images)~~
 
-![Sample from Celeba, 256x256, v1](doc/sample_256x256_v1_celeba.png)
+![Sample from CelebA, 256x256, v1](doc/sample_256x256_v1_celeba.png)
 
 TBA
-~~Sample from 256x256 Celeba dataset, GLOW256x256V1. At ???,??? iterations. (trained on ?.??M images)~~
+~~Sample from 256x256 CelebA dataset, GLOW256x256V1. At ???,??? iterations. (trained on ?.??M images)~~
 
 ## Reference
 https://github.com/VLL-HD/FrEIA <br/>
