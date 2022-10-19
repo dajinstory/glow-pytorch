@@ -38,7 +38,7 @@ and finetune from pretrained weights
 
 You can check the sampling result of the pretrained model by running demo/demo.ipynb
 
-If you want to utilize the Glow model for your personal research, you just need to refer to demo/ folder.
+If you want to utilize the Glow model for your personal research, you just need to refer to src/ folder and demo/ folder.
 
 ### Pretrained Checkpoints
 
