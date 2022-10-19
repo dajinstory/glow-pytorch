@@ -1,4 +1,4 @@
-# glow-pytorch
+# Glow: Generative Flow with Invertible 1x1 Convolutions
 
 Implementation of "Generative Flow with Invertible 1x1 Convolutions" (https://arxiv.org/abs/1807.03039) in Pytorch
 
@@ -38,15 +38,15 @@ and finetune from pretrained weights
 
 You can check the sampling result of the pretrained model by running src/demo.ipynb
 
-If you want to utilize the GLOW model for your personal research, you just need to refer to src/demo.ipynb, src/model/ and src/loss/nll_loss.py.
+If you want to utilize the Glow model for your personal research, you just need to refer to src/demo.ipynb, src/model/ and src/loss/nll_loss.py.
 
 ### Pretrained Checkpoints
 
-I trained 64x64 model on ImageNet and 256x256 model on CelebA dataset for ???? and ???? iterations, respectively. These models followed the setting from GLOW official paper. I got bpd(bits per dimension) about ?? and ?? for each, which are ?? and ?? from official paper. Maybe data preprocessing, training loop could made this difference. I trained 64x64 model with 1 GPU, 64 batch size on each GPU. And I trained 256x256 model with 4 GPUs, 8 batch size on each GPU. 
+I trained 64x64 model on ImageNet and 256x256 model on CelebA dataset for ???? and ???? iterations, respectively. These models followed the setting from Glow official paper. I got bpd(bits per dimension) about ?? and ?? for each, which are ?? and ?? from official paper. Maybe data preprocessing, training loop could made this difference. I trained 64x64 model with 1 GPU, 64 batch size on each GPU. And I trained 256x256 model with 4 GPUs, 8 batch size on each GPU. 
 
 Also I trained 64x64 model on CelebA 64x64 Dataset and trained 256x256 model which has affine-coupling rather than additive-coupling used in official paper. I got bpd(bits per dimension) about ?? and ?? for each.
 
-|      HParam       |          GLOW64x64V0          |         GLOW256x256V0         |         GLOW256x256V1         |
+|      HParam       |          Glow64x64V0          |         Glow256x256V0         |         Glow256x256V1         |
 | ----------------- | ----------------------------- | ----------------------------- | ----------------------------- |
 | input shape       | (64,64,3)                     | (256,256,3)                   | (256,256,3)                   |
 | L                 | 4                             | 6                             | 6                             |
@@ -59,10 +59,10 @@ Also I trained 64x64 model on CelebA 64x64 Dataset and trained 256x256 model whi
 
 |     Model     |   Dataset   |                              Checkpoint                                     |          Note         |
 | ------------- | ----------- | --------------------------------------------------------------------------- | --------------------- |
-| GLOW64x64V0   | ImageNet    | [GLOW64X64V0_ImageNet](https://drive.google.com/file/d/1ZrSXC6vVFZnAj1VWZYb0XQp6cJQqJTCT/view?usp=sharing)  | Official Setting      |
-| GLOW64x64V0   | CelebA      | [GLOW64X64V0_CelebA](https://drive.google.com/file/d/1_6hFc0OkyHusoATkXJUmnyA9rw4aRnnY/view?usp=sharing)  | 64x64 CelebA Dataset   |
-| GLOW256x256V0 | CelebA      | TBA  | Official Setting      |
-| GLOW256x256V1 | CelebA      | TBA  | additive -> affine    |
+| Glow64x64V0   | ImageNet    | [Glow64X64V0_ImageNet](https://drive.google.com/file/d/1ZrSXC6vVFZnAj1VWZYb0XQp6cJQqJTCT/view?usp=sharing)  | Official Setting      |
+| Glow64x64V0   | CelebA      | [Glow64X64V0_CelebA](https://drive.google.com/file/d/1_6hFc0OkyHusoATkXJUmnyA9rw4aRnnY/view?usp=sharing)  | 64x64 CelebA Dataset   |
+| Glow256x256V0 | CelebA      | TBA  | Official Setting      |
+| Glow256x256V1 | CelebA      | TBA  | additive -> affine    |
 
 ## Samples
 
@@ -85,12 +85,12 @@ Result of z space interpolation
 ![Sample from CelebA, 256x256, v0](doc/sample_256x256_v0_celeba.png)
 
 TBA
-~~Sample from 256x256 CelebA dataset, GLOW256x256V0. At ???,??? iterations. (trained on ?.??M images)~~
+~~Sample from 256x256 CelebA dataset, Glow256x256V0. At ???,??? iterations. (trained on ?.??M images)~~
 
 ![Sample from CelebA, 256x256, v1](doc/sample_256x256_v1_celeba.png)
 
 TBA
-~~Sample from 256x256 CelebA dataset, GLOW256x256V1. At ???,??? iterations. (trained on ?.??M images)~~
+~~Sample from 256x256 CelebA dataset, Glow256x256V1. At ???,??? iterations. (trained on ?.??M images)~~
 
 ## Reference
 https://github.com/VLL-HD/FrEIA <br/>
