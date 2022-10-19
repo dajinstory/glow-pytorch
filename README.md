@@ -92,12 +92,24 @@ TBA
 TBA
 ~~Sample from 256x256 CelebA dataset, Glow256x256V1. At ???,??? iterations. (trained on ?.??M images)~~
 
+## Citation
+If you use this software, please cite it as below.
+```
+@software{NF-pytorch,
+  author = {Dajin Han},
+  title = {{Framework for Flow-based Model in Pytorch}},
+  year = {2022},
+  url = {http://github.com/dajinstory/glow-pytorch}
+}
+```
+
 ## Reference
 https://github.com/VLL-HD/FrEIA <br/>
 https://github.com/rosinality/glow-pytorch <br/>
 https://github.com/y0ast/Glow-PyTorch <br/>
 https://github.com/chaiyujin/glow-pytorch <br/>
 
+```
 @inproceedings{kingma2018glow,
   title={Glow: Generative flow with invertible 1x1 convolutions},
   author={Kingma, Durk P and Dhariwal, Prafulla},
@@ -120,5 +132,5 @@ https://github.com/chaiyujin/glow-pytorch <br/>
   year = {2018-2022},
   url = {https://github.com/VLL-HD/FrEIA}
 }
-
+```
 
