@@ -41,11 +41,11 @@ seed_everything(args.seed)
 
 
 # Datamodule
-datamodule = build_datamodule(args.DATA, is_train=True)
+datamodule = build_datamodule(args.DATA, is_train=False)
 
 
 # Model
-model = build_model(args.MODEL, is_train=True)
+model = build_model(args.MODEL, is_train=False)
 ckpt_path = args.MODEL['pretrained']['ckpt_path']# if args.resume else None
 
 
